@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "pbs.twimg.com" },
@@ -10,16 +11,25 @@ const nextConfig = {
     ],
     unoptimized: true,
   },
-  webpack: (config, { isServer }) => {
-    // Fix @ledgerhq ESM import resolution issue
-    config.resolve.fallback = { ...config.resolve.fallback, fs: false };
-    config.resolve.extensionAlias = {
-      ".js": [".js", ".ts", ".tsx"],
+
+  webpack: (config) => {
+    // Fix Privy Farcaster error
+    config.externals = [
+      ...(config.externals || []),
+      '@farcaster/mini-app-solana'
+    ];
+
+    // Common Solana fixes
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
     };
+
     return config;
   },
-  // Pages router — no App Router
-  experimental: {},
+
+  // Fix for lockfile warning
+  outputFileTracingRoot: process.cwd(),
 };
 
 export default nextConfig;
