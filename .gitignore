@@ -1,0 +1,6 @@
+node_modules/
+.next/
+.env.local
+drizzle/
+*.log
+.DS_Store
